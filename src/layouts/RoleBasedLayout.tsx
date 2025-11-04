@@ -15,6 +15,7 @@ import { getMenuItemsForRole } from "../utils/rolePermissions";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CardItem from "../components/CardItem";
+import AdmissionForm from "../components/forms/AdmissionForm";
 
 const DRAWER_WIDTH = 240;
 
@@ -29,6 +30,7 @@ const roleNames: Record<string, string> = {
 const RoleBasedLayout: React.FC = () => {
   const { selectedRole } = useRole();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
 
   if (!selectedRole) {
     return null;
@@ -40,6 +42,10 @@ const RoleBasedLayout: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleMenuItemClick = (itemId: string): void => {
+    setSelectedMenuItem(itemId);
+  };
+
   const drawer = (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
@@ -48,7 +54,10 @@ const RoleBasedLayout: React.FC = () => {
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.id} disablePadding>
-            <ListItemButton>
+            <ListItemButton
+              selected={selectedMenuItem === item.id}
+              onClick={() => handleMenuItemClick(item.id)}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.label} />
             </ListItemButton>
@@ -114,13 +123,17 @@ const RoleBasedLayout: React.FC = () => {
             width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
           }}
         >
-          <Grid container spacing={3}>
-            {cardData.map((card, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <CardItem title={card.title} description={card.description} />
-              </Grid>
-            ))}
-          </Grid>
+          {selectedMenuItem === "internacion" ? (
+            <AdmissionForm />
+          ) : (
+            <Grid container spacing={3}>
+              {cardData.map((card, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <CardItem title={card.title} description={card.description} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
       </Box>
       <Footer />
