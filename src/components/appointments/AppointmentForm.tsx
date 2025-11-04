@@ -14,6 +14,7 @@ import { AppointmentFormData, Appointment } from "../../types/appointment";
 import { doctors, getDoctorById } from "../../utils/doctors";
 import { specialties } from "../../utils/specialties";
 import { getDoctorsBySpecialty } from "../../utils/doctors";
+import { patients, getPatientById, getPatientFullName } from "../../utils/patients";
 
 interface AppointmentFormProps {
   onSubmit: (appointment: Appointment) => void;
@@ -25,6 +26,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   existingAppointments,
 }) => {
   const [formData, setFormData] = useState<AppointmentFormData>({
+    pacienteId: "",
     doctorId: "",
     especialidad: "",
     fecha: "",
@@ -89,6 +91,9 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.pacienteId) {
+      newErrors.pacienteId = "Seleccione un paciente";
+    }
     if (!formData.doctorId) {
       newErrors.doctorId = "Seleccione un médico";
     }
@@ -132,6 +137,9 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   const handleSubmit = (): void => {
     if (!validateForm() || !selectedDoctor) return;
 
+    const selectedPatient = getPatientById(formData.pacienteId);
+    if (!selectedPatient) return;
+
     const newAppointment: Appointment = {
       id: `apt-${Date.now()}`,
       doctorId: formData.doctorId,
@@ -142,11 +150,14 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       horaInicio: formData.horaInicio,
       horaFin: formData.horaFin,
       numeroFicha: formData.numeroFicha,
+      pacienteId: formData.pacienteId,
+      pacienteNombre: getPatientFullName(selectedPatient),
       estado: "confirmada",
     };
 
     onSubmit(newAppointment);
     setFormData({
+      pacienteId: "",
       doctorId: "",
       especialidad: "",
       fecha: "",
@@ -168,6 +179,24 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
           Registrar Nueva Cita
         </Typography>
         <Grid container spacing={3} sx={{ mt: 1 }}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              select
+              label="Paciente"
+              value={formData.pacienteId}
+              onChange={handleChange("pacienteId")}
+              error={!!errors.pacienteId}
+              helperText={errors.pacienteId}
+              required
+            >
+              {patients.map((patient) => (
+                <MenuItem key={patient.id} value={patient.id}>
+                  {getPatientFullName(patient)} - {patient.documento}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
               fullWidth

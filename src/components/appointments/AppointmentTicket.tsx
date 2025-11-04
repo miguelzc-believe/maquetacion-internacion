@@ -52,6 +52,14 @@ const AppointmentTicket: React.FC<AppointmentTicketProps> = ({
           <Divider sx={{ my: 2 }} />
           <Box sx={{ mb: 2 }}>
             <Typography variant="body2" color="text.secondary">
+              Paciente:
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {appointment.pacienteNombre}
+            </Typography>
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">
               Médico:
             </Typography>
             <Typography variant="body1" gutterBottom>
@@ -135,6 +143,14 @@ const AppointmentTicket: React.FC<AppointmentTicketProps> = ({
             </Typography>
           </Box>
           <Divider sx={{ my: 2 }} />
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Paciente:
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              {appointment.pacienteNombre}
+            </Typography>
+          </Box>
           <Box sx={{ mb: 2 }}>
             <Typography variant="body2" color="text.secondary">
               Médico:

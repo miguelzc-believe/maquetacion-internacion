@@ -21,10 +21,13 @@ export interface Appointment {
   horaInicio: string;
   horaFin: string;
   numeroFicha: string;
+  pacienteId: string;
+  pacienteNombre: string;
   estado: AppointmentStatus;
 }
 
 export interface AppointmentFormData {
+  pacienteId: string;
   doctorId: string;
   especialidad: string;
   fecha: string;

@@ -549,6 +549,9 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                     secondary={
                       <Box>
                         <Typography variant="body2">
+                          {appointment.pacienteNombre}
+                        </Typography>
+                        <Typography variant="body2">
                           {appointment.doctorNombre}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
