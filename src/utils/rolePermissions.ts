@@ -12,6 +12,7 @@ import {
   Settings,
   Assessment,
   Security,
+  Hotel,
 } from "@mui/icons-material";
 import { MenuItem, UserRole } from "../types/role";
 
@@ -74,6 +75,12 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       label: "Citas",
       icon: React.createElement(CalendarToday),
       path: "/citas",
+    },
+    {
+      id: "internados",
+      label: "Pacientes Internados",
+      icon: React.createElement(Hotel),
+      path: "/internados",
     },
     {
       id: "historiales",
