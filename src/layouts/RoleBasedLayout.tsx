@@ -32,6 +32,7 @@ const roleNames: Record<string, string> = {
 const RoleBasedLayout: React.FC = () => {
   const { selectedRole } = useRole();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(true);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
 
   if (!selectedRole) {
@@ -44,24 +45,55 @@ const RoleBasedLayout: React.FC = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleDesktopDrawerToggle = (): void => {
+    setDesktopOpen(!desktopOpen);
+  };
+
   const handleMenuItemClick = (itemId: string): void => {
     setSelectedMenuItem(itemId);
   };
 
   const drawer = (
-    <Box sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        {roleNames[selectedRole]}
-      </Typography>
+    <Box sx={{ p: desktopOpen ? 2 : 1 }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: desktopOpen ? "flex-start" : "center",
+          mb: 2,
+          minHeight: 48,
+        }}
+      >
+        {desktopOpen ? (
+          <Typography variant="h6">{roleNames[selectedRole]}</Typography>
+        ) : (
+          <Typography variant="h6" sx={{ fontSize: "1rem" }}>
+            {roleNames[selectedRole].charAt(0)}
+          </Typography>
+        )}
+      </Box>
       <List>
         {menuItems.map((item) => (
           <ListItem key={item.id} disablePadding>
             <ListItemButton
               selected={selectedMenuItem === item.id}
               onClick={() => handleMenuItemClick(item.id)}
+              sx={{
+                minHeight: 48,
+                justifyContent: desktopOpen ? "flex-start" : "center",
+                px: desktopOpen ? 2 : 1.5,
+              }}
+              title={desktopOpen ? undefined : item.label}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.label} />
+              <ListItemIcon
+                sx={{
+                  minWidth: desktopOpen ? 40 : 0,
+                  justifyContent: "center",
+                }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              {desktopOpen && <ListItemText primary={item.label} />}
             </ListItemButton>
           </ListItem>
         ))}
@@ -80,11 +112,19 @@ const RoleBasedLayout: React.FC = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Header onMenuClick={handleDrawerToggle} />
+      <Header
+        onMenuClick={handleDrawerToggle}
+        onDesktopMenuToggle={handleDesktopDrawerToggle}
+        desktopMenuOpen={desktopOpen}
+      />
       <Box sx={{ display: "flex", flex: 1 }}>
         <Box
           component="nav"
-          sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+          sx={{
+            width: { md: desktopOpen ? DRAWER_WIDTH : 64 },
+            flexShrink: { md: 0 },
+            transition: "width 0.3s ease",
+          }}
         >
           <Drawer
             variant="temporary"
@@ -109,10 +149,14 @@ const RoleBasedLayout: React.FC = () => {
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
-                width: DRAWER_WIDTH,
+                width: desktopOpen ? DRAWER_WIDTH : 64,
+                transition: "width 0.3s ease",
+                overflowX: "hidden",
+                top: 64,
+                height: "calc(100% - 64px)",
               },
             }}
-            open
+            open={desktopOpen}
           >
             {drawer}
           </Drawer>
@@ -122,7 +166,8 @@ const RoleBasedLayout: React.FC = () => {
           sx={{
             flexGrow: 1,
             p: 3,
-            width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
+            width: { md: desktopOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : `calc(100% - 64px)` },
+            transition: "width 0.3s ease",
           }}
         >
           {selectedMenuItem === "internacion" ? (

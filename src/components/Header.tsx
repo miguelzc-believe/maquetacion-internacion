@@ -7,13 +7,19 @@ import {
   Avatar,
   Button,
   Box,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useRole } from "../contexts/RoleContext";
 
 interface HeaderProps {
   onMenuClick: () => void;
+  onDesktopMenuToggle?: () => void;
+  desktopMenuOpen?: boolean;
 }
 
 const roleNames: Record<string, string> = {
@@ -24,25 +30,43 @@ const roleNames: Record<string, string> = {
   administrador: "Administrador",
 };
 
-const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({
+  onMenuClick,
+  onDesktopMenuToggle,
+  desktopMenuOpen,
+}) => {
   const { selectedRole, clearRole } = useRole();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleChangeRole = (): void => {
     clearRole();
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          onClick={onMenuClick}
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
+        {isMobile ? (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={onMenuClick}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        ) : (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="toggle menu"
+            onClick={onDesktopMenuToggle}
+            sx={{ mr: 2 }}
+          >
+            {desktopMenuOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        )}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
