@@ -1,0 +1,238 @@
+---
+alwaysApply: true
+---
+
+**Prompt Principal**
+
+````
+Genera un proyecto completo de maquetación estática en React utilizando **React 18.3.1** y **react-dom 18.3.1**. Emplea **TypeScript 5.5.4** con tipado estricto absoluto: activa en `tsconfig.json` `"strict": true`, `"noImplicitAny": true`, `"noImplicitReturns": true`, `"strictNullChecks": true` y prohíbe explícitamente el uso de `any`, `unknown` o tipos implícitos en todo el código.
+
+**** — cualquier violación debe ser señalada como error.
+
+Para estilos, utiliza **exclusivamente**:
+- `@mui/material **6.1.6**`
+- `@mui/icons-material **6.1.6**`
+- `@emotion/react **11.14.0**`
+- `@emotion/styled **11.14.0**`
+
+No uses CSS modules, styled-components, Tailwind, ni ningún otro sistema de estilos. Todo el diseño debe basarse en componentes y utilidades de MUI.
+
+**Inicializa el proyecto con Vite 5.4.6** usando la plantilla oficial de React + TypeScript:
+```bash
+npm create vite@5.4.6 my-layout-app -- --template react-ts
+````
+
+**Estructura de carpetas obligatoria** (dentro de `src/`):
+
+```
+src/
+├── components/       # Componentes reutilizables (Header.tsx, Footer.tsx, CustomButton.tsx, CardItem.tsx, etc.)
+├── layouts/          # Composiciones de página (DashboardLayout.tsx, MainLayout.tsx)
+├── styles/
+│   └── theme.ts      # Tema global único con createTheme
+├── utils/            # Hooks simples o constantes tipadas (ej. breakpoints.ts)
+├── assets/           # Imágenes estáticas o íconos SVG
+├── App.tsx           # Punto de entrada
+└── main.tsx          # Renderizado con ReactDOM
+```
+
+---
+
+### **Configuración de `tsconfig.json` (exacta)**
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
+}
+```
+
+---
+
+### **Tema global obligatorio (`src/styles/theme.ts`)**
+
+```ts
+import { createTheme } from "@mui/material/styles";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+      light: "#42a5f5",
+      dark: "#1565c0",
+      contrastText: "#fff",
+    },
+    secondary: { main: "#9c27b0", light: "#ba68c8", dark: "#7b1fa2" },
+    error: { main: "#d32f2f" },
+    warning: { main: "#ed6c02" },
+    info: { main: "#0288d1" },
+    success: { main: "#2e7d32" },
+    background: { default: "#f5f5f5", paper: "#ffffff" },
+    text: { primary: "rgba(0, 0, 0, 0.87)", secondary: "rgba(0, 0, 0, 0.6)" },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    h1: { fontSize: "2.5rem", fontWeight: 500, lineHeight: 1.2 },
+    h2: { fontSize: "2rem", fontWeight: 500 },
+    h3: { fontSize: "1.75rem", fontWeight: 500 },
+    body1: { fontSize: "1rem", lineHeight: 1.5 },
+    button: { textTransform: "none", fontWeight: 600 },
+  },
+  shape: { borderRadius: 8 },
+  spacing: 8,
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          textTransform: "none",
+          fontWeight: 600,
+          padding: "6px 16px",
+        },
+      },
+      defaultProps: { disableElevation: true },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: { borderRadius: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.1)" },
+      },
+    },
+    MuiPaper: { styleOverrides: { root: { backgroundImage: "unset" } } },
+  },
+});
+
+export default theme;
+```
+
+---
+
+### **App.tsx (entrada principal)**
+
+```tsx
+import React from "react";
+import { ThemeProvider } from "@emotion/react";
+import { CssBaseline } from "@mui/material";
+import theme from "./styles/theme";
+import DashboardLayout from "./layouts/DashboardLayout";
+
+function App() {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <DashboardLayout />
+    </ThemeProvider>
+  );
+}
+
+export default App;
+```
+
+---
+
+### **main.tsx**
+
+```tsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+---
+
+### **Mejores prácticas UI/UX obligatorias**
+
+1. **Responsividad**: Usa `Grid` con breakpoints explícitos (`xs=12`, `sm=6`, `md=4`, etc.). Implementa `Drawer` colapsable en móviles con `useMediaQuery(theme.breakpoints.down('md'))`.
+2. **Accesibilidad**:
+   - Todo botón tiene `aria-label` si no tiene texto visible.
+   - Enlaces y botones usan `component="button"` o `Link` con `role="button"`.
+   - Focus visible automático (no sobrescribir `outline`).
+3. **Jerarquía visual**:
+   - `Typography variant="h1"` solo una vez por página.
+   - Espaciado consistente: `theme.spacing(2)`, `theme.spacing(3)`, etc.
+   - Uso de `Stack` para alineación vertical/horizontal.
+4. **Componentes globales**:
+   - `CustomButton` (con props tipadas: `label: string`, `variant?: 'text' |140 'outlined' | 'contained'`, `onClick?: () => void`)
+   - `Header` con `AppBar`, `Toolbar`, `Typography`, `IconButton`
+   - `Footer` con `Copyright` y enlaces estáticos
+   - `CardItem` con `Card`, `CardContent`, `CardMedia` (placeholder), `Typography`
+
+---
+
+### **package.json (dependencias exactas)**
+
+```json
+{
+  "name": "my-layout-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.0",
+    "@mui/icons-material": "6.1.6",
+    "@mui/material": "6.1.6",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "4.3.1",
+    "typescript": "5.5.4",
+    "vite": "5.4.6"
+  }
+}
+```
+
+---
+
+### **UI específica a implementar**
+
+[Inserta aquí tu descripción detallada, por ejemplo:  
+\_"Un dashboard responsivo con:
+
+- `Drawer` lateral permanente en desktop, temporal en móvil
+- `AppBar` con título 'Dashboard', botón de menú y avatar placeholder
+- `Grid` de 3 columnas en desktop (md=4) con `Card` que muestra título, descripción y botón 'Ver más'
+- `Footer` fijo con copyright y enlaces estáticos
+- Todo con placeholders estáticos, sin estado ni lógica"\_]
+
+---
+
+### **Salida esperada**
+
+- Código completo de **todos los archivos clave** listados arriba.
+- Explicación breve (máx. 2 líneas) por decisión crítica (ej. “Grid usado para layout fluido y responsive; Stack evitado para mayor control de breakpoints”).
+- **Cero alucinaciones**: respeta versiones, nombres de archivos, estructura y restricciones exactas.
