@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Box, Tabs, Tab, Container } from "@mui/material";
-import { Appointment } from "../../types/appointment";
-import AppointmentForm from "./AppointmentForm";
-import AppointmentCalendar from "./AppointmentCalendar";
-import AppointmentTicket from "./AppointmentTicket";
+import { Box, Tabs, Tab } from "@mui/material";
+import { Appointment } from "../types/appointment";
+import AppointmentForm from "../components/appointments/AppointmentForm";
+import AppointmentCalendar from "../components/appointments/AppointmentCalendar";
+import AppointmentTicket from "../components/appointments/AppointmentTicket";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ const AppointmentsPage: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Box>
       <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
         <Tabs value={tabValue} onChange={handleTabChange}>
           <Tab label="Registrar Cita" />
@@ -108,8 +108,9 @@ const AppointmentsPage: React.FC = () => {
           </Box>
         </Box>
       )}
-    </Container>
+    </Box>
   );
 };
 
 export default AppointmentsPage;
+

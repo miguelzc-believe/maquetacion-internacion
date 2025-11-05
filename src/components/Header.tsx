@@ -15,22 +15,13 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useRole } from "../contexts/RoleContext";
+import { roleNames } from "../utils/roleNames";
 
 interface HeaderProps {
   onMenuClick: () => void;
   onDesktopMenuToggle?: () => void;
   desktopMenuOpen?: boolean;
 }
-
-const roleNames: Record<string, string> = {
-  recepcionista: "Recepcionista",
-  cajero: "Cajero",
-  medico: "Médico",
-  enfermera: "Enfermera",
-  administrador: "Administrador",
-  laboratorio: "Laboratorio",
-  presupuesto: "Presupuesto",
-};
 
 const Header: React.FC<HeaderProps> = ({
   onMenuClick,
@@ -46,7 +37,10 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Toolbar>
         {isMobile ? (
           <IconButton

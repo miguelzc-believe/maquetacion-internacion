@@ -7,7 +7,6 @@ import {
   StepLabel,
   Button,
   Typography,
-  Container,
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -152,7 +151,7 @@ const AdmissionForm: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
+    <Box>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Admisión a Internación
@@ -202,7 +201,7 @@ const AdmissionForm: React.FC = () => {
           Admisión registrada exitosamente
         </Alert>
       </Snackbar>
-    </Container>
+    </Box>
   );
 };
 

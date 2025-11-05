@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Typography,
-  Paper,
-} from "@mui/material";
+import { Box, Container, Grid, Typography, Paper } from "@mui/material";
 import {
   PersonAdd,
   Payment,
@@ -67,8 +61,24 @@ const availableRoles: RoleConfig[] = [
 const RoleSelection: React.FC = () => {
   const { setSelectedRole } = useRole();
 
-  const handleRoleSelect = (roleId: UserRole): void => {
-    setSelectedRole(roleId);
+  const validRoleIds: UserRole[] = [
+    "recepcionista",
+    "cajero",
+    "medico",
+    "enfermera",
+    "administrador",
+    "laboratorio",
+    "presupuesto",
+  ];
+
+  const isValidRoleId = (roleId: string): roleId is UserRole => {
+    return validRoleIds.includes(roleId as UserRole);
+  };
+
+  const handleRoleSelect = (roleId: string): void => {
+    if (isValidRoleId(roleId)) {
+      setSelectedRole(roleId);
+    }
   };
 
   return (
@@ -100,10 +110,7 @@ const RoleSelection: React.FC = () => {
         <Grid container spacing={3}>
           {availableRoles.map((role) => (
             <Grid item xs={12} sm={6} md={4} key={role.id}>
-              <RoleCard
-                role={role}
-                onSelect={(roleId) => handleRoleSelect(roleId as UserRole)}
-              />
+              <RoleCard role={role} onSelect={handleRoleSelect} />
             </Grid>
           ))}
         </Grid>

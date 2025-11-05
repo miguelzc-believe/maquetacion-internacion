@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import {
   Box,
-  Container,
   Grid,
   Typography,
   TextField,
@@ -19,9 +18,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { inpatients } from "../../utils/inpatients";
-import { Inpatient } from "../../types/inpatient";
-import InpatientCard from "./InpatientCard";
+import { inpatients } from "../utils/inpatients";
+import { Inpatient } from "../types/inpatient";
+import InpatientCard from "../components/inpatients/InpatientCard";
 
 const InpatientsPage: React.FC = () => {
   const theme = useTheme();
@@ -33,7 +32,9 @@ const InpatientsPage: React.FC = () => {
     let filtered: Inpatient[] = inpatients;
 
     if (statusFilter !== "todos") {
-      filtered = filtered.filter((inpatient) => inpatient.estado === statusFilter);
+      filtered = filtered.filter(
+        (inpatient) => inpatient.estado === statusFilter
+      );
     }
 
     if (searchTerm) {
@@ -60,7 +61,7 @@ const InpatientsPage: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Box>
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h4" component="h1" gutterBottom>
           Pacientes Internados
@@ -195,7 +196,9 @@ const InpatientsPage: React.FC = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">{diasInternado} días</Typography>
+                      <Typography variant="body2">
+                        {diasInternado} días
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2">
@@ -226,7 +229,7 @@ const InpatientsPage: React.FC = () => {
           </Table>
         </TableContainer>
       )}
-    </Container>
+    </Box>
   );
 };
 

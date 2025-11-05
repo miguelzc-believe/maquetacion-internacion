@@ -10,7 +10,13 @@ interface RoleCardProps {
 const RoleCard: React.FC<RoleCardProps> = ({ role, onSelect }) => {
   return (
     <Card>
-      <CardActionArea onClick={() => onSelect(role.id)} sx={{ height: "100%" }}>
+      <CardActionArea
+        onClick={() => onSelect(role.id)}
+        sx={{ height: "100%" }}
+        role="button"
+        aria-label={`Seleccionar rol ${role.name}`}
+        tabIndex={0}
+      >
         <CardContent>
           <Box
             sx={{

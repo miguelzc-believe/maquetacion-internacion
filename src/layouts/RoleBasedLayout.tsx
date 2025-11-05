@@ -12,24 +12,14 @@ import {
 } from "@mui/material";
 import { useRole } from "../contexts/RoleContext";
 import { getMenuItemsForRole } from "../utils/rolePermissions";
+import { roleNames } from "../utils/roleNames";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import CardItem from "../components/CardItem";
 import AdmissionForm from "../components/forms/AdmissionForm";
-import AppointmentsPage from "../components/appointments/AppointmentsPage";
-import InpatientsPage from "../components/inpatients/InpatientsPage";
+import AppointmentsPage from "../pages/AppointmentsPage";
+import InpatientsPage from "../pages/InpatientsPage";
 
 const DRAWER_WIDTH = 240;
-
-const roleNames: Record<string, string> = {
-  recepcionista: "Recepcionista",
-  cajero: "Cajero",
-  medico: "Médico",
-  enfermera: "Enfermera",
-  administrador: "Administrador",
-  laboratorio: "Laboratorio",
-  presupuesto: "Presupuesto",
-};
 
 const RoleBasedLayout: React.FC = () => {
   const { selectedRole } = useRole();
@@ -168,7 +158,11 @@ const RoleBasedLayout: React.FC = () => {
           sx={{
             flexGrow: 1,
             p: 3,
-            width: { md: desktopOpen ? `calc(100% - ${DRAWER_WIDTH}px)` : `calc(100% - 64px)` },
+            width: {
+              md: desktopOpen
+                ? `calc(100% - ${DRAWER_WIDTH}px)`
+                : `calc(100% - 64px)`,
+            },
             transition: "width 0.3s ease",
           }}
         >
@@ -189,7 +183,6 @@ const RoleBasedLayout: React.FC = () => {
           )}
         </Box>
       </Box>
-      <Footer />
     </Box>
   );
 };

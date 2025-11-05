@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { UserRole } from "../types/role";
 
 interface RoleContextType {
@@ -11,13 +17,31 @@ const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 const STORAGE_KEY = "selectedRole";
 
-export const RoleProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const validRoles: UserRole[] = [
+  "recepcionista",
+  "cajero",
+  "medico",
+  "enfermera",
+  "administrador",
+  "laboratorio",
+  "presupuesto",
+];
+
+const isValidRole = (role: string): role is UserRole => {
+  return validRoles.includes(role as UserRole);
+};
+
+export const RoleProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [selectedRole, setSelectedRoleState] = useState<UserRole | null>(null);
 
   useEffect(() => {
     const storedRole = localStorage.getItem(STORAGE_KEY);
-    if (storedRole) {
-      setSelectedRoleState(storedRole as UserRole);
+    if (storedRole && isValidRole(storedRole)) {
+      setSelectedRoleState(storedRole);
+    } else if (storedRole) {
+      localStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 
