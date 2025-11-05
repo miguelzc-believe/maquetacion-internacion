@@ -5,7 +5,9 @@ export type UserRole =
   | "cajero"
   | "medico"
   | "enfermera"
-  | "administrador";
+  | "administrador"
+  | "laboratorio"
+  | "presupuesto";
 
 export interface RoleConfig {
   id: UserRole;

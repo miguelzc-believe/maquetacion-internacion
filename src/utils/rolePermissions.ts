@@ -13,6 +13,10 @@ import {
   Assessment,
   Security,
   Hotel,
+  Science,
+  AccountBalanceWallet,
+  Description,
+  Calculate,
 } from "@mui/icons-material";
 import { MenuItem, UserRole } from "../types/role";
 
@@ -139,6 +143,58 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       label: "Seguridad",
       icon: React.createElement(Security),
       path: "/seguridad",
+    },
+  ],
+  laboratorio: [
+    {
+      id: "analisis",
+      label: "Análisis",
+      icon: React.createElement(Science),
+      path: "/analisis",
+    },
+    {
+      id: "resultados",
+      label: "Resultados",
+      icon: React.createElement(Assignment),
+      path: "/resultados",
+    },
+    {
+      id: "estudios",
+      label: "Estudios",
+      icon: React.createElement(MedicalServices),
+      path: "/estudios",
+    },
+    {
+      id: "reportes-lab",
+      label: "Reportes",
+      icon: React.createElement(Assessment),
+      path: "/reportes-lab",
+    },
+  ],
+  presupuesto: [
+    {
+      id: "presupuestos",
+      label: "Presupuestos",
+      icon: React.createElement(AccountBalanceWallet),
+      path: "/presupuestos",
+    },
+    {
+      id: "costos",
+      label: "Costos",
+      icon: React.createElement(Calculate),
+      path: "/costos",
+    },
+    {
+      id: "cotizaciones",
+      label: "Cotizaciones",
+      icon: React.createElement(Description),
+      path: "/cotizaciones",
+    },
+    {
+      id: "reportes-pres",
+      label: "Reportes",
+      icon: React.createElement(Assessment),
+      path: "/reportes-pres",
     },
   ],
 };

@@ -27,6 +27,8 @@ const roleNames: Record<string, string> = {
   medico: "Médico",
   enfermera: "Enfermera",
   administrador: "Administrador",
+  laboratorio: "Laboratorio",
+  presupuesto: "Presupuesto",
 };
 
 const RoleBasedLayout: React.FC = () => {
@@ -117,7 +119,7 @@ const RoleBasedLayout: React.FC = () => {
         onDesktopMenuToggle={handleDesktopDrawerToggle}
         desktopMenuOpen={desktopOpen}
       />
-      <Box sx={{ display: "flex", flex: 1 }}>
+      <Box sx={{ display: "flex", flex: 1, mt: "64px" }}>
         <Box
           component="nav"
           sx={{

@@ -12,6 +12,8 @@ import {
   LocalHospital,
   MedicalServices,
   AdminPanelSettings,
+  Science,
+  AccountBalanceWallet,
 } from "@mui/icons-material";
 import { useRole } from "../contexts/RoleContext";
 import { RoleConfig, UserRole } from "../types/role";
@@ -47,6 +49,18 @@ const availableRoles: RoleConfig[] = [
     name: "Administrador",
     description: "Gestión del sistema completo",
     icon: <AdminPanelSettings />,
+  },
+  {
+    id: "laboratorio",
+    name: "Laboratorio",
+    description: "Análisis y estudios de laboratorio",
+    icon: <Science />,
+  },
+  {
+    id: "presupuesto",
+    name: "Presupuesto",
+    description: "Gestión de presupuestos y costos",
+    icon: <AccountBalanceWallet />,
   },
 ];
 
