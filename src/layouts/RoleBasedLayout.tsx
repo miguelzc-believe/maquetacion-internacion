@@ -18,6 +18,7 @@ import CardItem from "../components/CardItem";
 import AdmissionForm from "../components/forms/AdmissionForm";
 import AppointmentsPage from "../pages/AppointmentsPage";
 import InpatientsPage from "../pages/InpatientsPage";
+import OrdenesInternacionPage from "../pages/OrdenesInternacionPage";
 
 const DRAWER_WIDTH = 240;
 
@@ -172,6 +173,8 @@ const RoleBasedLayout: React.FC = () => {
             <AppointmentsPage />
           ) : selectedMenuItem === "internados" ? (
             <InpatientsPage />
+          ) : selectedMenuItem === "ordenes-internacion" ? (
+            <OrdenesInternacionPage />
           ) : (
             <Grid container spacing={3}>
               {cardData.map((card, index) => (
