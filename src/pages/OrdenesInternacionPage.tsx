@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Paper,
@@ -12,8 +12,13 @@ import {
 } from "@mui/material";
 import { admissionOrders } from "../utils/admissionOrders";
 import { AdmissionOrder } from "../types/admissionOrder";
+import InternationProcessForm from "../components/forms/internation/InternationProcessForm";
 
 const OrdenesInternacionPage: React.FC = () => {
+  const [selectedOrder, setSelectedOrder] = useState<AdmissionOrder | null>(
+    null
+  );
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString("es-ES", {
@@ -22,6 +27,29 @@ const OrdenesInternacionPage: React.FC = () => {
       day: "numeric",
     });
   };
+
+  const handleRowClick = (order: AdmissionOrder): void => {
+    setSelectedOrder(order);
+  };
+
+  const handleCloseForm = (): void => {
+    setSelectedOrder(null);
+  };
+
+  const handleComplete = (): void => {
+    setSelectedOrder(null);
+  };
+
+  if (selectedOrder) {
+    return (
+      <InternationProcessForm
+        orderId={selectedOrder.id}
+        patientName={selectedOrder.pacienteNombre}
+        onClose={handleCloseForm}
+        onComplete={handleComplete}
+      />
+    );
+  }
 
   return (
     <Box>
@@ -66,7 +94,17 @@ const OrdenesInternacionPage: React.FC = () => {
           </TableHead>
           <TableBody>
             {admissionOrders.map((order: AdmissionOrder) => (
-              <TableRow key={order.id} hover>
+              <TableRow
+                key={order.id}
+                hover
+                onClick={() => handleRowClick(order)}
+                sx={{
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "action.hover",
+                  },
+                }}
+              >
                 <TableCell>
                   <Typography variant="body2" fontWeight="medium">
                     {order.pacienteNombre}
