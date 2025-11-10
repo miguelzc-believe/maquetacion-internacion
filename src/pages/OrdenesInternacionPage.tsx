@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -9,15 +9,25 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Button,
+  Chip,
 } from "@mui/material";
-import { admissionOrders } from "../utils/admissionOrders";
+import { Add } from "@mui/icons-material";
+import { refreshOrders } from "../utils/admissionOrders";
 import { AdmissionOrder } from "../types/admissionOrder";
 import InternationProcessForm from "../components/forms/internation/InternationProcessForm";
+import CreateTemporaryOrderDialog from "../components/forms/internation/CreateTemporaryOrderDialog";
 
 const OrdenesInternacionPage: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<AdmissionOrder | null>(
     null
   );
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [orders, setOrders] = useState<AdmissionOrder[]>(refreshOrders());
+
+  useEffect(() => {
+    setOrders(refreshOrders());
+  }, [selectedOrder]);
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
@@ -40,6 +50,11 @@ const OrdenesInternacionPage: React.FC = () => {
     setSelectedOrder(null);
   };
 
+  const handleOrderCreated = (order: AdmissionOrder): void => {
+    setSelectedOrder(order);
+    setShowCreateDialog(false);
+  };
+
   if (selectedOrder) {
     return (
       <InternationProcessForm
@@ -54,11 +69,20 @@ const OrdenesInternacionPage: React.FC = () => {
   return (
     <Box>
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Órdenes de Internación
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-          Total de órdenes: {admissionOrders.length}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
+          <Typography variant="h4" component="h1">
+            Órdenes de Internación
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => setShowCreateDialog(true)}
+          >
+            Nueva Orden de Internación
+          </Button>
+        </Box>
+        <Typography variant="body2" color="text.secondary">
+          Total de órdenes: {orders.length}
         </Typography>
       </Paper>
       <TableContainer component={Paper} elevation={3}>
@@ -90,10 +114,15 @@ const OrdenesInternacionPage: React.FC = () => {
                   Diagnóstico
                 </Typography>
               </TableCell>
+              <TableCell>
+                <Typography variant="subtitle2" fontWeight="bold">
+                  Estado
+                </Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {admissionOrders.map((order: AdmissionOrder) => (
+            {orders.map((order: AdmissionOrder) => (
               <TableRow
                 key={order.id}
                 hover
@@ -126,11 +155,21 @@ const OrdenesInternacionPage: React.FC = () => {
                 <TableCell>
                   <Typography variant="body2">{order.diagnostico}</Typography>
                 </TableCell>
+                <TableCell>
+                  {order.temporal && (
+                    <Chip label="Temporal" color="warning" size="small" />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <CreateTemporaryOrderDialog
+        open={showCreateDialog}
+        onClose={() => setShowCreateDialog(false)}
+        onOrderCreated={handleOrderCreated}
+      />
     </Box>
   );
 };

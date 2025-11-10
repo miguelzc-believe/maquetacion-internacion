@@ -16,6 +16,7 @@ import InternationPatientDataStep from "./InternationPatientDataStep";
 import InternationEmergencyContactStep from "./InternationEmergencyContactStep";
 import ConsentDocumentsStep from "./ConsentDocumentsStep";
 import BedAssignmentStep from "./BedAssignmentStep";
+import { updateOrder } from "../../../utils/admissionOrders";
 
 interface InternationProcessFormProps {
   orderId: string;
@@ -81,6 +82,11 @@ const InternationProcessForm: React.FC<InternationProcessFormProps> = ({
 
   const handleSubmit = (): void => {
     console.log("Proceso de internación completado:", formData);
+    
+    updateOrder(orderId, {
+      temporal: false,
+    });
+    
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
