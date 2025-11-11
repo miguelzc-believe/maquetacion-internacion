@@ -12,10 +12,13 @@ export interface PatientBudget {
   fechaIngreso: string;
   fechaAlta?: string;
   items: BudgetItem[];
+  servicios: string[];
+  medicamentos: string[];
+  estudios: string[];
   subtotal: number;
   descuentos: number;
   total: number;
-  estado: "borrador" | "revisado" | "aprobado" | "en_caja" | "pagado";
+  estado: "borrador" | "revisado" | "aprobado" | "en_caja" | "pagado" | "pendiente" | "revision";
   observaciones?: string;
 }
 

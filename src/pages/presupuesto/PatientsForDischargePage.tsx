@@ -34,11 +34,15 @@ const PatientsForDischargePage: React.FC = () => {
     const newBudget: PatientBudget = {
       id: `budget-${Date.now()}`,
       pacienteId: epicrisis.pacienteId,
+      pacienteNombre: `Paciente ${epicrisis.pacienteId}`,
       fechaIngreso: epicrisis.fechaIngreso,
       fechaAlta: epicrisis.fechaAlta,
+      items: [],
       servicios: [],
       medicamentos: [],
       estudios: [],
+      subtotal: 0,
+      descuentos: 0,
       total: 0,
       estado: "pendiente",
     };

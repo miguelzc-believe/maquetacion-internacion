@@ -6,9 +6,10 @@ export interface ImagingRequest {
   estudio: string;
   region: string;
   fechaSolicitud: string;
-  estado: "pendiente" | "programado" | "realizado" | "completado";
+  estado: "pendiente" | "programado" | "realizado" | "completado" | "en_proceso";
   fechaProgramada?: string;
   fechaRealizacion?: string;
+  fechaEstudio?: string;
   informe?: string;
   fechaInforme?: string;
   indicaciones?: string;

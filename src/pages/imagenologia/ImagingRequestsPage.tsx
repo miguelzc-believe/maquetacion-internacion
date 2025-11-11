@@ -58,6 +58,8 @@ const ImagingRequestsPage: React.FC = () => {
   const statusColors: Record<ImagingRequest["estado"], "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning"> = {
     pendiente: "warning",
     en_proceso: "info",
+    programado: "info",
+    realizado: "primary",
     completado: "success",
   };
 
