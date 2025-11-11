@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -12,14 +12,44 @@ import {
   Chip,
   Paper,
   Divider,
+  Stack,
+  Avatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+  useTheme,
+  Button,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
-import { Home, ArrowBack } from "@mui/icons-material";
+import {
+  Home,
+  ArrowBack,
+  Assignment,
+  Notes,
+  Description,
+  HighlightOff,
+  Add,
+} from "@mui/icons-material";
 import { getPatientById } from "../utils/patients";
 import { inpatients } from "../utils/inpatients";
+import { admissionOrders, createTemporaryOrder } from "../utils/admissionOrders";
+import { AdmissionOrder } from "../types/admissionOrder";
+
+type SectionKey = "ordenes" | "notas" | "epicrisis" | "defuncion";
 
 const PatientDetailsPage: React.FC = () => {
   const { pacienteId } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+  const [selectedSection, setSelectedSection] = useState<SectionKey>("ordenes");
 
   if (!pacienteId) {
     return (
@@ -67,167 +97,233 @@ const PatientDetailsPage: React.FC = () => {
     }
   };
 
+  const patientOrders: AdmissionOrder[] = useMemo(() => {
+    const byId = admissionOrders.filter((o) => o.pacienteId === pacienteId);
+    if (byId.length > 0) return byId;
+    return admissionOrders.filter(
+      (o) => o.pacienteNombre.toLowerCase() === fullName.toLowerCase()
+    );
+  }, [pacienteId, fullName]);
+
+  const handleAddOrder = (): void => {
+    const nombre = fullName;
+    const pid = pacienteId;
+    const medicoACargo = inpatient ? inpatient.medicoResponsable : "-";
+    const diagnostico = inpatient ? inpatient.diagnostico : "-";
+    const medicoSolicitante = medicoACargo;
+    createTemporaryOrder(nombre, pid, medicoSolicitante, medicoACargo, diagnostico);
+    navigate(0);
+  };
+
+  const renderSection = (): React.ReactNode => {
+    if (selectedSection === "ordenes") {
+      return (
+        <Card>
+          <CardContent>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+              <Typography variant="h6">Órdenes médicas</Typography>
+              <Button variant="contained" startIcon={<Add />} onClick={handleAddOrder} aria-label="Agregar orden médica">
+                Agregar orden
+              </Button>
+            </Stack>
+            {patientOrders.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                No hay órdenes médicas registradas
+              </Typography>
+            ) : (
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Fecha</TableCell>
+                    <TableCell>Diagnóstico</TableCell>
+                    <TableCell>Médico solicitante</TableCell>
+                    <TableCell>Médico a cargo</TableCell>
+                    <TableCell>Estado</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {patientOrders.map((order) => (
+                    <TableRow key={order.id} hover>
+                      <TableCell>{order.fechaAgendamiento}</TableCell>
+                      <TableCell>{order.diagnostico}</TableCell>
+                      <TableCell>{order.medicoSolicitante}</TableCell>
+                      <TableCell>{order.medicoACargo}</TableCell>
+                      <TableCell>
+                        {order.temporal ? (
+                          <Chip label="Temporal" color="warning" size="small" />
+                        ) : (
+                          <Chip label="Definitiva" color="success" size="small" />
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      );
+    }
+
+    if (selectedSection === "notas") {
+      return (
+        <Card>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Notas de evolución
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Sin notas cargadas. Próximamente formulario de registro.
+            </Typography>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    if (selectedSection === "epicrisis") {
+      return (
+        <Card>
+          <CardContent>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Epicrisis y alta
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Sección para registrar epicrisis y alta.
+            </Typography>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Certificado de defunción
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Sección para emitir certificado de defunción.
+          </Typography>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "background.default" }}>
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 3 }}>
+      <Container maxWidth="lg" sx={{ py: 3 }}>
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
           <Link
             component="button"
-            variant="body1"
+            variant="body2"
             onClick={() => navigate("/")}
             sx={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           >
             <Home sx={{ mr: 0.5 }} fontSize="inherit" />
             Inicio
           </Link>
-          <Link
-            component="button"
-            variant="body1"
-            onClick={() => navigate("/")}
-            sx={{ cursor: "pointer" }}
-          >
+          <Link component="button" variant="body2" onClick={() => navigate("/")}
+            sx={{ cursor: "pointer" }}>
             Pacientes internados
           </Link>
-          <Typography color="text.primary">{fullName}</Typography>
+          <Typography color="text.primary" variant="body2">{fullName}</Typography>
         </Breadcrumbs>
 
-        <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
-          <Link
-            component="button"
-            onClick={() => navigate(-1)}
-            sx={{ display: "flex", alignItems: "center", mr: 2, cursor: "pointer" }}
-          >
-            <ArrowBack sx={{ mr: 1 }} />
-            Volver
-          </Link>
-        </Box>
-
-        <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-            <Typography variant="h4" component="h1">
-              Detalles del Paciente
-            </Typography>
-            {inpatient ? (
-              <Chip label={inpatient.estado} color={getEstadoColor(inpatient.estado)} />
-            ) : null}
-          </Box>
-          <Typography variant="h5" color="text.secondary" gutterBottom>
-            {fullName}
-          </Typography>
+        <Paper elevation={3} sx={{ p: 2, mb: 3 }}>
+          <Stack direction={{ xs: "column", md: "row" }} spacing={2} alignItems={{ xs: "flex-start", md: "center" }}>
+            <Avatar sx={{ width: 56, height: 56 }} aria-label="avatar paciente">
+              {fullName.charAt(0)}
+            </Avatar>
+            <Box sx={{ flex: 1, width: "100" }}>
+              <Stack direction={{ xs: "column", md: "row" }} spacing={2} justifyContent="space-between" alignItems={{ xs: "flex-start", md: "center" }}>
+                <Box>
+                  <Typography variant="h5" component="h1" sx={{ mb: 0.5 }}>
+                    {fullName}
+                  </Typography>
+                  <Stack direction="row" spacing={2} flexWrap="wrap">
+                    {patient?.documento ? (
+                      <Typography variant="body2" color="text.secondary">Doc: {patient.documento}</Typography>
+                    ) : null}
+                    {inpatient ? (
+                      <Typography variant="body2" color="text.secondary">Edad: {inpatient.edad} años</Typography>
+                    ) : null}
+                    {inpatient ? (
+                      <Typography variant="body2" color="text.secondary">Días: {diasInternado ?? "-"}</Typography>
+                    ) : null}
+                    {inpatient ? (
+                      <Typography variant="body2" color="text.secondary">Hab: {inpatient.habitacion} / Cama {inpatient.cama}</Typography>
+                    ) : null}
+                    {inpatient ? (
+                      <Typography variant="body2" color="text.secondary">Médico: {inpatient.medicoResponsable}</Typography>
+                    ) : null}
+                  </Stack>
+                </Box>
+                {inpatient ? (
+                  <Chip label={inpatient.estado} color={getEstadoColor(inpatient.estado)} size="small" />
+                ) : null}
+              </Stack>
+              {inpatient ? (
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  Dx: {inpatient.diagnostico}
+                </Typography>
+              ) : null}
+            </Box>
+            <Link
+              component="button"
+              onClick={() => navigate(-1)}
+              sx={{ display: "flex", alignItems: "center", whiteSpace: "nowrap" }}
+            >
+              <ArrowBack sx={{ mr: 1 }} />
+              Volver
+            </Link>
+          </Stack>
         </Paper>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Información de Contacto
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <Box sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Documento
-                  </Typography>
-                  <Typography variant="body1">{patient?.documento ?? "-"}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    Teléfono
-                  </Typography>
-                  <Typography variant="body1">{patient?.telefono ?? "-"}</Typography>
-                </Box>
-              </CardContent>
-            </Card>
+          <Grid item xs={12} md={3}>
+            <Paper elevation={3} sx={{ p: 1 }}>
+              <nav aria-label="Submenú paciente">
+                <List>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={selectedSection === "ordenes"} onClick={() => setSelectedSection("ordenes")} role="button">
+                      <ListItemIcon>
+                        <Assignment />
+                      </ListItemIcon>
+                      <ListItemText primary="Órdenes médicas" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={selectedSection === "notas"} onClick={() => setSelectedSection("notas")} role="button">
+                      <ListItemIcon>
+                        <Notes />
+                      </ListItemIcon>
+                      <ListItemText primary="Notas de evolución" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={selectedSection === "epicrisis"} onClick={() => setSelectedSection("epicrisis")} role="button">
+                      <ListItemIcon>
+                        <Description />
+                      </ListItemIcon>
+                      <ListItemText primary="Epicrisis y alta" />
+                    </ListItemButton>
+                  </ListItem>
+                  <ListItem disablePadding>
+                    <ListItemButton selected={selectedSection === "defuncion"} onClick={() => setSelectedSection("defuncion")} role="button">
+                      <ListItemIcon>
+                        <HighlightOff />
+                      </ListItemIcon>
+                      <ListItemText primary="Certificado de defunción" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </nav>
+            </Paper>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Estado de Internación
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                {inpatient ? (
-                  <>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        Diagnóstico
-                      </Typography>
-                      <Typography variant="body1">{inpatient.diagnostico}</Typography>
-                    </Box>
-                    <Box sx={{ mb: 2 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        Días Internado
-                      </Typography>
-                      <Typography variant="body1">{diasInternado} días</Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="body2" color="text.secondary">
-                        Habitación / Cama
-                      </Typography>
-                      <Typography variant="body1">
-                        {inpatient.habitacion} - Cama {inpatient.cama}
-                      </Typography>
-                    </Box>
-                  </>
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No se encuentra internado actualmente
-                  </Typography>
-                )}
-              </CardContent>
-            </Card>
+          <Grid item xs={12} md={9}>
+            {renderSection()}
           </Grid>
-
-          {inpatient ? (
-            <>
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Alergias
-                    </Typography>
-                    <Divider sx={{ mb: 2 }} />
-                    {inpatient.alergias.length > 0 ? (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                        {inpatient.alergias.map((alergia, index) => (
-                          <Chip key={index} label={alergia} color="error" size="small" />
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        No registra alergias
-                      </Typography>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Medicamentos
-                    </Typography>
-                    <Divider sx={{ mb: 2 }} />
-                    {inpatient.medicamentos.length > 0 ? (
-                      <Box component="ul" sx={{ pl: 2, m: 0 }}>
-                        {inpatient.medicamentos.map((medicamento, index) => (
-                          <li key={index}>
-                            <Typography variant="body1">{medicamento}</Typography>
-                          </li>
-                        ))}
-                      </Box>
-                    ) : (
-                      <Typography variant="body2" color="text.secondary">
-                        No hay medicamentos registrados
-                      </Typography>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            </>
-          ) : null}
         </Grid>
       </Container>
     </Box>
