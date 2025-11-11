@@ -16,6 +16,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 import { inpatients } from "../utils/inpatients";
 import { Inpatient } from "../types/inpatient";
 import InpatientCard from "../components/inpatients/InpatientCard";
@@ -24,6 +25,7 @@ const InpatientsPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const filteredInpatients = useMemo(() => {
     let filtered: Inpatient[] = inpatients;
@@ -129,7 +131,20 @@ const InpatientsPage: React.FC = () => {
                 );
 
                 return (
-                  <TableRow key={inpatient.id} hover>
+                  <TableRow
+                    key={inpatient.id}
+                    hover
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/pacientes/${inpatient.pacienteId}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(`/pacientes/${inpatient.pacienteId}`);
+                      }
+                    }}
+                    sx={{ cursor: "pointer" }}
+                 >
                     <TableCell>
                       <Typography variant="body2" fontWeight="medium">
                         {inpatient.pacienteNombre}
