@@ -8,6 +8,8 @@ export const roleNames: Record<UserRole, string> = {
   administrador: "Administrador",
   laboratorio: "Laboratorio",
   presupuesto: "Presupuesto",
+  farmacia: "Farmacia",
+  imagenologia: "Imagenología",
 };
 
 export const getRoleName = (role: UserRole): string => {

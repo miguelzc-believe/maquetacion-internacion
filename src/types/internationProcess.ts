@@ -25,6 +25,8 @@ export interface InternationConsentDocuments {
   consentimientoAnestesico: File | null;
 }
 
+import { InsuranceData } from "./admission";
+
 export interface BedAssignment {
   habitacion: string;
   cama: string;
@@ -34,6 +36,7 @@ export interface InternationProcessData {
   orderId: string;
   patientData: InternationPatientData;
   emergencyContact: InternationEmergencyContact;
+  insuranceData: InsuranceData;
   consentDocuments: InternationConsentDocuments;
   bedAssignment: BedAssignment;
 }

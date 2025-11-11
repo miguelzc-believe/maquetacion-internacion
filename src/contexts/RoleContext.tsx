@@ -25,6 +25,8 @@ const validRoles: UserRole[] = [
   "administrador",
   "laboratorio",
   "presupuesto",
+  "farmacia",
+  "imagenologia",
 ];
 
 const isValidRole = (role: string): role is UserRole => {

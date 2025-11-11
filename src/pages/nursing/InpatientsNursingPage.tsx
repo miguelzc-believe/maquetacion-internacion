@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Grid,
@@ -16,11 +16,11 @@ import {
   useTheme,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { inpatients } from "../utils/inpatients";
-import { Inpatient } from "../types/inpatient";
-import InpatientCard from "../components/inpatients/InpatientCard";
+import { inpatients } from "../../utils/inpatients";
+import { Inpatient } from "../../types/inpatient";
+import InpatientCard from "../../components/inpatients/InpatientCard";
 
-const InpatientsPage: React.FC = () => {
+const InpatientsNursingPage: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,6 +70,7 @@ const InpatientsPage: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+
       {filteredInpatients.length === 0 ? (
         <Paper elevation={2} sx={{ p: 4, textAlign: "center" }}>
           <Typography variant="h6" color="text.secondary">
@@ -163,4 +164,5 @@ const InpatientsPage: React.FC = () => {
   );
 };
 
-export default InpatientsPage;
+export default InpatientsNursingPage;
+

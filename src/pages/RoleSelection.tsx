@@ -8,6 +8,8 @@ import {
   AdminPanelSettings,
   Science,
   AccountBalanceWallet,
+  Medication,
+  CameraAlt,
 } from "@mui/icons-material";
 import { useRole } from "../contexts/RoleContext";
 import { RoleConfig, UserRole } from "../types/role";
@@ -56,6 +58,18 @@ const availableRoles: RoleConfig[] = [
     description: "Gestión de presupuestos y costos",
     icon: <AccountBalanceWallet />,
   },
+  {
+    id: "farmacia",
+    name: "Farmacia",
+    description: "Gestión de medicamentos y descargos",
+    icon: <Medication />,
+  },
+  {
+    id: "imagenologia",
+    name: "Imagenología",
+    description: "Estudios de imagen y diagnósticos",
+    icon: <CameraAlt />,
+  },
 ];
 
 const RoleSelection: React.FC = () => {
@@ -69,6 +83,8 @@ const RoleSelection: React.FC = () => {
     "administrador",
     "laboratorio",
     "presupuesto",
+    "farmacia",
+    "imagenologia",
   ];
 
   const isValidRoleId = (roleId: string): roleId is UserRole => {

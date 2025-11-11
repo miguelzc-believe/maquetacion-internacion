@@ -16,7 +16,9 @@ import InternationPatientDataStep from "./InternationPatientDataStep";
 import InternationEmergencyContactStep from "./InternationEmergencyContactStep";
 import ConsentDocumentsStep from "./ConsentDocumentsStep";
 import BedAssignmentStep from "./BedAssignmentStep";
+import InsuranceDataStep from "../InsuranceDataStep";
 import { updateOrder } from "../../../utils/admissionOrders";
+import { InsuranceData } from "../../../types/admission";
 
 interface InternationProcessFormProps {
   orderId: string;
@@ -28,6 +30,7 @@ interface InternationProcessFormProps {
 const steps = [
   "Datos del Paciente",
   "Datos de Contacto de Emergencia",
+  "Datos del Seguro",
   "Documentos de Consentimiento",
   "Asignación de Cama",
 ];
@@ -59,6 +62,16 @@ const InternationProcessForm: React.FC<InternationProcessFormProps> = ({
       email: "",
       parentesco: "",
       telefonoEmergencia: "",
+    },
+    insuranceData: {
+      categoria: "",
+      numeroMatricula: "",
+      numeroCarpeta: "",
+      matricula: "",
+      empresa: "",
+      telefono: "",
+      direccion: "",
+      nombreAsegurado: "",
     },
     consentDocuments: {
       consentimientoInformado: null,
@@ -117,6 +130,13 @@ const InternationProcessForm: React.FC<InternationProcessFormProps> = ({
     });
   };
 
+  const handleInsuranceDataChange = (data: InsuranceData): void => {
+    setFormData({
+      ...formData,
+      insuranceData: data,
+    });
+  };
+
   const handleConsentDocumentsChange = (
     data: typeof formData.consentDocuments
   ): void => {
@@ -153,12 +173,19 @@ const InternationProcessForm: React.FC<InternationProcessFormProps> = ({
         );
       case 2:
         return (
+          <InsuranceDataStep
+            data={formData.insuranceData}
+            onChange={handleInsuranceDataChange}
+          />
+        );
+      case 3:
+        return (
           <ConsentDocumentsStep
             data={formData.consentDocuments}
             onChange={handleConsentDocumentsChange}
           />
         );
-      case 3:
+      case 4:
         return (
           <BedAssignmentStep
             data={formData.bedAssignment}

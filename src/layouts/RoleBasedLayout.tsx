@@ -19,6 +19,26 @@ import AdmissionForm from "../components/forms/AdmissionForm";
 import AppointmentsPage from "../pages/AppointmentsPage";
 import InpatientsPage from "../pages/InpatientsPage";
 import OrdenesInternacionPage from "../pages/OrdenesInternacionPage";
+import InpatientsNursingPage from "../pages/nursing/InpatientsNursingPage";
+import VitalSignsPage from "../pages/nursing/VitalSignsPage";
+import BalanceHidricoPage from "../pages/nursing/BalanceHidricoPage";
+import MedicalOrdersNursingPage from "../pages/nursing/MedicalOrdersNursingPage";
+import NursingNotesPage from "../pages/nursing/NursingNotesPage";
+import MedicalOrdersDoctorPage from "../pages/doctor/MedicalOrdersDoctorPage";
+import EvolutionNotesPage from "../pages/doctor/EvolutionNotesPage";
+import EpicrisisAltaPage from "../pages/doctor/EpicrisisAltaPage";
+import DeathCertificatePage from "../pages/doctor/DeathCertificatePage";
+import PharmacyRequestsPage from "../pages/farmacia/PharmacyRequestsPage";
+import PrepareMedicationsPage from "../pages/farmacia/PrepareMedicationsPage";
+import ReturnsPage from "../pages/farmacia/ReturnsPage";
+import LaboratoryRequestsPage from "../pages/laboratory/LaboratoryRequestsPage";
+import CollectSamplePage from "../pages/laboratory/CollectSamplePage";
+import ResultsPage from "../pages/laboratory/ResultsPage";
+import ImagingRequestsPage from "../pages/imagenologia/ImagingRequestsPage";
+import PerformStudyPage from "../pages/imagenologia/PerformStudyPage";
+import ReportsPage from "../pages/imagenologia/ReportsPage";
+import PatientsForDischargePage from "../pages/presupuesto/PatientsForDischargePage";
+import AccountDetailsPage from "../pages/presupuesto/AccountDetailsPage";
 
 const DRAWER_WIDTH = 240;
 
@@ -175,6 +195,46 @@ const RoleBasedLayout: React.FC = () => {
             <InpatientsPage />
           ) : selectedMenuItem === "ordenes-internacion" ? (
             <OrdenesInternacionPage />
+          ) : selectedMenuItem === "pacientes-internados" ? (
+            <InpatientsNursingPage />
+          ) : selectedMenuItem === "signos-vitales" ? (
+            <VitalSignsPage />
+          ) : selectedMenuItem === "balance-hidrico" ? (
+            <BalanceHidricoPage />
+          ) : selectedMenuItem === "ordenes-medicas" && selectedRole === "enfermera" ? (
+            <MedicalOrdersNursingPage />
+          ) : selectedMenuItem === "notas-enfermeria" ? (
+            <NursingNotesPage />
+          ) : selectedMenuItem === "ordenes-medicas" && selectedRole === "medico" ? (
+            <MedicalOrdersDoctorPage />
+          ) : selectedMenuItem === "notas-evolucion" ? (
+            <EvolutionNotesPage />
+          ) : selectedMenuItem === "epicrisis-alta" ? (
+            <EpicrisisAltaPage />
+          ) : selectedMenuItem === "certificado-defuncion" ? (
+            <DeathCertificatePage />
+          ) : selectedMenuItem === "solicitudes-farmacia" ? (
+            <PharmacyRequestsPage />
+          ) : selectedMenuItem === "preparar-medicamentos" ? (
+            <PrepareMedicationsPage />
+          ) : selectedMenuItem === "devoluciones" ? (
+            <ReturnsPage />
+          ) : selectedMenuItem === "solicitudes-lab" ? (
+            <LaboratoryRequestsPage />
+          ) : selectedMenuItem === "recolectar-muestra" ? (
+            <CollectSamplePage />
+          ) : selectedMenuItem === "resultados" && selectedRole === "laboratorio" ? (
+            <ResultsPage />
+          ) : selectedMenuItem === "solicitudes-imagen" ? (
+            <ImagingRequestsPage />
+          ) : selectedMenuItem === "realizar-estudio" ? (
+            <PerformStudyPage />
+          ) : selectedMenuItem === "informes" ? (
+            <ReportsPage />
+          ) : selectedMenuItem === "pacientes-alta" ? (
+            <PatientsForDischargePage />
+          ) : selectedMenuItem === "detalles-cuenta" ? (
+            <AccountDetailsPage />
           ) : (
             <Grid container spacing={3}>
               {cardData.map((card, index) => (

@@ -7,7 +7,9 @@ export type UserRole =
   | "enfermera"
   | "administrador"
   | "laboratorio"
-  | "presupuesto";
+  | "presupuesto"
+  | "farmacia"
+  | "imagenologia";
 
 export interface RoleConfig {
   id: UserRole;

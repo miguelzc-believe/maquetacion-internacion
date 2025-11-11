@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
+import { Provider } from "jotai";
 import theme from "./styles/theme";
 import { RoleProvider, useRole } from "./contexts/RoleContext";
 import RoleSelection from "./pages/RoleSelection";
@@ -14,12 +15,14 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <RoleProvider>
-        <AppContent />
-      </RoleProvider>
-    </ThemeProvider>
+    <Provider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <RoleProvider>
+          <AppContent />
+        </RoleProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

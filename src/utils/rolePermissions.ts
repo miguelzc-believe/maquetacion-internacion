@@ -17,6 +17,13 @@ import {
   AccountBalanceWallet,
   Description,
   Calculate,
+  Medication,
+  CameraAlt,
+  Favorite,
+  WaterDrop,
+  Note,
+  ExitToApp,
+  Cancel,
 } from "@mui/icons-material";
 import { MenuItem, UserRole } from "../types/role";
 
@@ -75,54 +82,66 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   ],
   medico: [
     {
-      id: "pacientes",
-      label: "Pacientes",
-      icon: React.createElement(People),
-      path: "/pacientes",
-    },
-    {
-      id: "citas",
-      label: "Citas",
-      icon: React.createElement(CalendarToday),
-      path: "/citas",
-    },
-    {
       id: "internados",
       label: "Pacientes Internados",
       icon: React.createElement(Hotel),
       path: "/internados",
     },
     {
-      id: "historiales",
-      label: "Historiales Médicos",
-      icon: React.createElement(LocalHospital),
-      path: "/historiales",
+      id: "ordenes-medicas",
+      label: "Órdenes Médicas",
+      icon: React.createElement(Assignment),
+      path: "/ordenes-medicas",
     },
     {
-      id: "diagnosticos",
-      label: "Diagnósticos",
-      icon: React.createElement(MedicalServices),
-      path: "/diagnosticos",
+      id: "notas-evolucion",
+      label: "Notas Evolución",
+      icon: React.createElement(Note),
+      path: "/notas-evolucion",
+    },
+    {
+      id: "epicrisis-alta",
+      label: "Epicrisis / Alta",
+      icon: React.createElement(ExitToApp),
+      path: "/epicrisis-alta",
+    },
+    {
+      id: "certificado-defuncion",
+      label: "Certificado Defunción",
+      icon: React.createElement(Cancel),
+      path: "/certificado-defuncion",
     },
   ],
   enfermera: [
     {
-      id: "pacientes",
-      label: "Pacientes",
-      icon: React.createElement(People),
-      path: "/pacientes",
+      id: "pacientes-internados",
+      label: "Pacientes Internados",
+      icon: React.createElement(Hotel),
+      path: "/pacientes-internados",
     },
     {
-      id: "citas",
-      label: "Citas",
-      icon: React.createElement(CalendarToday),
-      path: "/citas",
+      id: "signos-vitales",
+      label: "Signos Vitales",
+      icon: React.createElement(Favorite),
+      path: "/signos-vitales",
     },
     {
-      id: "procedimientos",
-      label: "Procedimientos",
-      icon: React.createElement(MedicalServices),
-      path: "/procedimientos",
+      id: "balance-hidrico",
+      label: "Balance Hídrico",
+      icon: React.createElement(WaterDrop),
+      path: "/balance-hidrico",
+    },
+    {
+      id: "ordenes-medicas",
+      label: "Órdenes Médicas",
+      icon: React.createElement(Assignment),
+      path: "/ordenes-medicas",
+    },
+    {
+      id: "notas-enfermeria",
+      label: "Notas Enfermería",
+      icon: React.createElement(Note),
+      path: "/notas-enfermeria",
     },
   ],
   administrador: [
@@ -153,54 +172,76 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
   ],
   laboratorio: [
     {
-      id: "analisis",
-      label: "Análisis",
+      id: "solicitudes-lab",
+      label: "Solicitudes Lab",
+      icon: React.createElement(Assignment),
+      path: "/solicitudes-lab",
+    },
+    {
+      id: "recolectar-muestra",
+      label: "Recolectar Muestra",
       icon: React.createElement(Science),
-      path: "/analisis",
+      path: "/recolectar-muestra",
     },
     {
       id: "resultados",
       label: "Resultados",
-      icon: React.createElement(Assignment),
-      path: "/resultados",
-    },
-    {
-      id: "estudios",
-      label: "Estudios",
-      icon: React.createElement(MedicalServices),
-      path: "/estudios",
-    },
-    {
-      id: "reportes-lab",
-      label: "Reportes",
       icon: React.createElement(Assessment),
-      path: "/reportes-lab",
+      path: "/resultados",
     },
   ],
   presupuesto: [
     {
-      id: "presupuestos",
-      label: "Presupuestos",
+      id: "pacientes-alta",
+      label: "Pacientes para Alta",
+      icon: React.createElement(People),
+      path: "/pacientes-alta",
+    },
+    {
+      id: "detalles-cuenta",
+      label: "Detalles Cuenta",
       icon: React.createElement(AccountBalanceWallet),
-      path: "/presupuestos",
+      path: "/detalles-cuenta",
+    },
+  ],
+  farmacia: [
+    {
+      id: "solicitudes-farmacia",
+      label: "Solicitudes Descargo",
+      icon: React.createElement(Assignment),
+      path: "/solicitudes-farmacia",
     },
     {
-      id: "costos",
-      label: "Costos",
-      icon: React.createElement(Calculate),
-      path: "/costos",
+      id: "preparar-medicamentos",
+      label: "Preparar Medicamentos",
+      icon: React.createElement(Medication),
+      path: "/preparar-medicamentos",
     },
     {
-      id: "cotizaciones",
-      label: "Cotizaciones",
+      id: "devoluciones",
+      label: "Devoluciones",
+      icon: React.createElement(Receipt),
+      path: "/devoluciones",
+    },
+  ],
+  imagenologia: [
+    {
+      id: "solicitudes-imagen",
+      label: "Solicitudes Estudios",
+      icon: React.createElement(Assignment),
+      path: "/solicitudes-imagen",
+    },
+    {
+      id: "realizar-estudio",
+      label: "Realizar Estudio",
+      icon: React.createElement(CameraAlt),
+      path: "/realizar-estudio",
+    },
+    {
+      id: "informes",
+      label: "Informes",
       icon: React.createElement(Description),
-      path: "/cotizaciones",
-    },
-    {
-      id: "reportes-pres",
-      label: "Reportes",
-      icon: React.createElement(Assessment),
-      path: "/reportes-pres",
+      path: "/informes",
     },
   ],
 };
@@ -208,3 +249,4 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
 export const getMenuItemsForRole = (role: UserRole): MenuItem[] => {
   return menuItemsByRole[role] || [];
 };
+
