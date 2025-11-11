@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Drawer,
@@ -47,6 +47,12 @@ const RoleBasedLayout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(true);
   const [selectedMenuItem, setSelectedMenuItem] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedRole === "medico" && selectedMenuItem === null) {
+      setSelectedMenuItem("internados");
+    }
+  }, [selectedRole, selectedMenuItem]);
 
   if (!selectedRole) {
     return null;
