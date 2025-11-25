@@ -15,8 +15,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
-  MenuItem,
+  Stack,
+  Divider,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { pharmacyRequestsAtom, updatePharmacyRequestAtom, getPharmacyRequestsByStatusAtom } from "../../stores/pharmacyStore";
@@ -37,23 +37,8 @@ const PharmacyRequestsPage: React.FC = () => {
   ) as MedicationOrder[];
 
   const pendingRequests = useMemo(() => {
-    const existingRequestOrderIds = requests.map((r) => r.ordenMedicaId);
-    const newOrders = medicationOrders.filter((order) => !existingRequestOrderIds.includes(order.id));
-
-    const newRequests: PharmacyRequest[] = newOrders.map((order) => ({
-      id: `pr-${Date.now()}-${order.id}`,
-      ordenMedicaId: order.id,
-      pacienteId: order.pacienteId,
-      pacienteNombre: order.pacienteNombre,
-      medicamento: order.medicamento,
-      dosis: order.dosis,
-      cantidad: 1,
-      fechaSolicitud: order.fechaCreacion,
-      estado: "pendiente",
-    }));
-
-    return [...requests, ...newRequests].filter((r) => r.estado === "pendiente");
-  }, [orders, requests]);
+    return requests.filter((r) => r.estado === "pendiente");
+  }, [requests]);
 
   const handleViewDetails = (request: PharmacyRequest): void => {
     setSelectedRequest(request);
@@ -106,8 +91,9 @@ const PharmacyRequestsPage: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Paciente</TableCell>
-              <TableCell>Medicamento</TableCell>
-              <TableCell>Dosis</TableCell>
+              <TableCell>Enfermera</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Medicamentos</TableCell>
               <TableCell>Fecha Solicitud</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Acciones</TableCell>
@@ -116,9 +102,26 @@ const PharmacyRequestsPage: React.FC = () => {
           <TableBody>
             {pendingRequests.map((request) => (
               <TableRow key={request.id} hover>
-                <TableCell>{request.pacienteNombre}</TableCell>
-                <TableCell>{request.medicamento}</TableCell>
-                <TableCell>{request.dosis}</TableCell>
+                <TableCell>
+                  <Typography variant="body2" fontWeight="medium">
+                    {request.pacienteNombre}
+                  </Typography>
+                </TableCell>
+                <TableCell>{request.enfermera}</TableCell>
+                <TableCell>
+                  <Typography variant="body2">
+                    Hab. {request.habitacion} - Cama {request.cama}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Stack spacing={0.5}>
+                    {request.medicamentos.map((med, index) => (
+                      <Typography key={index} variant="body2">
+                        {med.medicamento} ({med.dosis})
+                      </Typography>
+                    ))}
+                  </Stack>
+                </TableCell>
                 <TableCell>
                   {new Date(request.fechaSolicitud).toLocaleDateString("es-ES")}
                 </TableCell>
@@ -149,13 +152,33 @@ const PharmacyRequestsPage: React.FC = () => {
                 <strong>Paciente:</strong> {selectedRequest.pacienteNombre}
               </Typography>
               <Typography variant="body1">
-                <strong>Medicamento:</strong> {selectedRequest.medicamento}
+                <strong>Enfermera:</strong> {selectedRequest.enfermera}
               </Typography>
               <Typography variant="body1">
-                <strong>Dosis:</strong> {selectedRequest.dosis}
+                <strong>Ubicación:</strong> Hab. {selectedRequest.habitacion} - Cama {selectedRequest.cama}
               </Typography>
+              <Divider />
+              <Typography variant="subtitle2" fontWeight="bold">
+                Medicamentos:
+              </Typography>
+              <Stack spacing={1.5}>
+                {selectedRequest.medicamentos.map((med, index) => (
+                  <Box key={index} sx={{ pl: 2, borderLeft: 2, borderColor: "primary.main" }}>
+                    <Typography variant="body2" fontWeight="medium">
+                      {med.medicamento}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Dosis: {med.dosis}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Cantidad/día: {med.cantidad}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+              <Divider />
               <Typography variant="body1">
-                <strong>Cantidad:</strong> {selectedRequest.cantidad}
+                <strong>Cantidad Total/Día:</strong> {selectedRequest.cantidadTotalDia}
               </Typography>
               <Typography variant="body1">
                 <strong>Estado:</strong>{" "}

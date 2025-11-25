@@ -20,20 +20,11 @@ import AppointmentsPage from "../pages/AppointmentsPage";
 import InpatientsPage from "../pages/InpatientsPage";
 import OrdenesInternacionPage from "../pages/OrdenesInternacionPage";
 import InpatientsNursingPage from "../pages/nursing/InpatientsNursingPage";
-import VitalSignsPage from "../pages/nursing/VitalSignsPage";
-import BalanceHidricoPage from "../pages/nursing/BalanceHidricoPage";
-import MedicalOrdersNursingPage from "../pages/nursing/MedicalOrdersNursingPage";
-import NursingNotesPage from "../pages/nursing/NursingNotesPage";
-import MedicalOrdersDoctorPage from "../pages/doctor/MedicalOrdersDoctorPage";
-import EvolutionNotesPage from "../pages/doctor/EvolutionNotesPage";
-import EpicrisisAltaPage from "../pages/doctor/EpicrisisAltaPage";
-import DeathCertificatePage from "../pages/doctor/DeathCertificatePage";
 import PharmacyRequestsPage from "../pages/farmacia/PharmacyRequestsPage";
 import PrepareMedicationsPage from "../pages/farmacia/PrepareMedicationsPage";
 import ReturnsPage from "../pages/farmacia/ReturnsPage";
-import LaboratoryRequestsPage from "../pages/laboratory/LaboratoryRequestsPage";
+import LaboratoryPage from "../pages/laboratory/LaboratoryPage";
 import CollectSamplePage from "../pages/laboratory/CollectSamplePage";
-import ResultsPage from "../pages/laboratory/ResultsPage";
 import ImagingRequestsPage from "../pages/imagenologia/ImagingRequestsPage";
 import PerformStudyPage from "../pages/imagenologia/PerformStudyPage";
 import ReportsPage from "../pages/imagenologia/ReportsPage";
@@ -51,6 +42,12 @@ const RoleBasedLayout: React.FC = () => {
   useEffect(() => {
     if (selectedRole === "medico" && selectedMenuItem === null) {
       setSelectedMenuItem("internados");
+    } else if (selectedRole === "farmacia" && selectedMenuItem === null) {
+      setSelectedMenuItem("solicitudes-farmacia");
+    } else if (selectedRole === "enfermera" && selectedMenuItem === null) {
+      setSelectedMenuItem("pacientes-internados");
+    } else if (selectedRole === "recepcionista" && selectedMenuItem === null) {
+      setSelectedMenuItem("ordenes-internacion");
     }
   }, [selectedRole, selectedMenuItem]);
 
@@ -203,22 +200,6 @@ const RoleBasedLayout: React.FC = () => {
             <OrdenesInternacionPage />
           ) : selectedMenuItem === "pacientes-internados" ? (
             <InpatientsNursingPage />
-          ) : selectedMenuItem === "signos-vitales" ? (
-            <VitalSignsPage />
-          ) : selectedMenuItem === "balance-hidrico" ? (
-            <BalanceHidricoPage />
-          ) : selectedMenuItem === "ordenes-medicas" && selectedRole === "enfermera" ? (
-            <MedicalOrdersNursingPage />
-          ) : selectedMenuItem === "notas-enfermeria" ? (
-            <NursingNotesPage />
-          ) : selectedMenuItem === "ordenes-medicas" && selectedRole === "medico" ? (
-            <MedicalOrdersDoctorPage />
-          ) : selectedMenuItem === "notas-evolucion" ? (
-            <EvolutionNotesPage />
-          ) : selectedMenuItem === "epicrisis-alta" ? (
-            <EpicrisisAltaPage />
-          ) : selectedMenuItem === "certificado-defuncion" ? (
-            <DeathCertificatePage />
           ) : selectedMenuItem === "solicitudes-farmacia" ? (
             <PharmacyRequestsPage />
           ) : selectedMenuItem === "preparar-medicamentos" ? (
@@ -226,11 +207,9 @@ const RoleBasedLayout: React.FC = () => {
           ) : selectedMenuItem === "devoluciones" ? (
             <ReturnsPage />
           ) : selectedMenuItem === "solicitudes-lab" ? (
-            <LaboratoryRequestsPage />
+            <LaboratoryPage />
           ) : selectedMenuItem === "recolectar-muestra" ? (
             <CollectSamplePage />
-          ) : selectedMenuItem === "resultados" && selectedRole === "laboratorio" ? (
-            <ResultsPage />
           ) : selectedMenuItem === "solicitudes-imagen" ? (
             <ImagingRequestsPage />
           ) : selectedMenuItem === "realizar-estudio" ? (

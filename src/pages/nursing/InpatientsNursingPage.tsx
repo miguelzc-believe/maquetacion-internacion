@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Grid,
@@ -22,6 +23,7 @@ import InpatientCard from "../../components/inpatients/InpatientCard";
 
 const InpatientsNursingPage: React.FC = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -130,7 +132,20 @@ const InpatientsNursingPage: React.FC = () => {
                 );
 
                 return (
-                  <TableRow key={inpatient.id} hover>
+                  <TableRow
+                    key={inpatient.id}
+                    hover
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/pacientes/${inpatient.pacienteId}`)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(`/pacientes/${inpatient.pacienteId}`);
+                      }
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
                     <TableCell>
                       <Typography variant="body2" fontWeight="medium">
                         {inpatient.pacienteNombre}

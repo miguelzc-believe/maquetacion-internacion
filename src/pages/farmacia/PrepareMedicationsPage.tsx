@@ -11,6 +11,7 @@ import {
   TableRow,
   Chip,
   Button,
+  Stack,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { pharmacyRequestsAtom, updatePharmacyRequestAtom } from "../../stores/pharmacyStore";
@@ -55,9 +56,8 @@ const PrepareMedicationsPage: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Paciente</TableCell>
-              <TableCell>Medicamento</TableCell>
-              <TableCell>Dosis</TableCell>
-              <TableCell>Cantidad</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Medicamentos</TableCell>
               <TableCell>Estado</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
@@ -65,10 +65,25 @@ const PrepareMedicationsPage: React.FC = () => {
           <TableBody>
             {preparingRequests.map((request) => (
               <TableRow key={request.id} hover>
-                <TableCell>{request.pacienteNombre}</TableCell>
-                <TableCell>{request.medicamento}</TableCell>
-                <TableCell>{request.dosis}</TableCell>
-                <TableCell>{request.cantidad}</TableCell>
+                <TableCell>
+                  <Typography variant="body2" fontWeight="medium">
+                    {request.pacienteNombre}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body2">
+                    Hab. {request.habitacion} - Cama {request.cama}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Stack spacing={0.5}>
+                    {request.medicamentos.map((med, index) => (
+                      <Typography key={index} variant="body2">
+                        {med.medicamento} ({med.dosis})
+                      </Typography>
+                    ))}
+                  </Stack>
+                </TableCell>
                 <TableCell>
                   <Chip label={request.estado} color={statusColors[request.estado]} size="small" />
                 </TableCell>
