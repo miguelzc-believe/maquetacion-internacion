@@ -42,12 +42,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       path: "/citas",
     },
     {
-      id: "registros",
-      label: "Registros",
-      icon: React.createElement(Assignment),
-      path: "/registros",
-    },
-    {
       id: "internacion",
       label: "Internación",
       icon: React.createElement(LocalHospital),

@@ -46,6 +46,8 @@ const RoleBasedLayout: React.FC = () => {
       setSelectedMenuItem("solicitudes-farmacia");
     } else if (selectedRole === "enfermera" && selectedMenuItem === null) {
       setSelectedMenuItem("pacientes-internados");
+    } else if (selectedRole === "recepcionista" && selectedMenuItem === null) {
+      setSelectedMenuItem("ordenes-internacion");
     }
   }, [selectedRole, selectedMenuItem]);
 
