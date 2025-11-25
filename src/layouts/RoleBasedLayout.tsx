@@ -51,6 +51,8 @@ const RoleBasedLayout: React.FC = () => {
   useEffect(() => {
     if (selectedRole === "medico" && selectedMenuItem === null) {
       setSelectedMenuItem("internados");
+    } else if (selectedRole === "farmacia" && selectedMenuItem === null) {
+      setSelectedMenuItem("solicitudes-farmacia");
     }
   }, [selectedRole, selectedMenuItem]);
 

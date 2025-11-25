@@ -16,6 +16,7 @@ import {
   DialogActions,
   TextField,
   Grid,
+  Stack,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { pharmacyRequestsAtom, updatePharmacyRequestAtom } from "../../stores/pharmacyStore";
@@ -32,7 +33,7 @@ const ReturnsPage: React.FC = () => {
 
   const handleOpenReturn = (request: PharmacyRequest): void => {
     setSelectedRequest(request);
-    setReturnData({ cantidad: request.cantidad, motivo: "" });
+    setReturnData({ cantidad: request.cantidadTotalDia, motivo: "" });
     setOpen(true);
   };
 
@@ -73,9 +74,8 @@ const ReturnsPage: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Paciente</TableCell>
-              <TableCell>Medicamento</TableCell>
-              <TableCell>Dosis</TableCell>
-              <TableCell>Cantidad</TableCell>
+              <TableCell>Ubicación</TableCell>
+              <TableCell>Medicamentos</TableCell>
               <TableCell>Fecha Entrega</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
@@ -83,10 +83,25 @@ const ReturnsPage: React.FC = () => {
           <TableBody>
             {deliveredRequests.map((request) => (
               <TableRow key={request.id} hover>
-                <TableCell>{request.pacienteNombre}</TableCell>
-                <TableCell>{request.medicamento}</TableCell>
-                <TableCell>{request.dosis}</TableCell>
-                <TableCell>{request.cantidad}</TableCell>
+                <TableCell>
+                  <Typography variant="body2" fontWeight="medium">
+                    {request.pacienteNombre}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="body2">
+                    Hab. {request.habitacion} - Cama {request.cama}
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Stack spacing={0.5}>
+                    {request.medicamentos.map((med, index) => (
+                      <Typography key={index} variant="body2">
+                        {med.medicamento} ({med.dosis})
+                      </Typography>
+                    ))}
+                  </Stack>
+                </TableCell>
                 <TableCell>
                   {request.fechaEntrega
                     ? new Date(request.fechaEntrega).toLocaleDateString("es-ES")
@@ -119,9 +134,16 @@ const ReturnsPage: React.FC = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1">
-                  <strong>Medicamento:</strong> {selectedRequest.medicamento}
+                <Typography variant="body1" gutterBottom>
+                  <strong>Medicamentos:</strong>
                 </Typography>
+                <Stack spacing={0.5} sx={{ pl: 2 }}>
+                  {selectedRequest.medicamentos.map((med, index) => (
+                    <Typography key={index} variant="body2">
+                      {med.medicamento} - {med.dosis} (Cantidad/día: {med.cantidad})
+                    </Typography>
+                  ))}
+                </Stack>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -132,7 +154,7 @@ const ReturnsPage: React.FC = () => {
                   onChange={(e) =>
                     setReturnData({ ...returnData, cantidad: parseFloat(e.target.value) || 0 })
                   }
-                  inputProps={{ min: 0, max: selectedRequest.cantidad }}
+                  inputProps={{ min: 0, max: selectedRequest.cantidadTotalDia }}
                 />
               </Grid>
               <Grid item xs={12}>
