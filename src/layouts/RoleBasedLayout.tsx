@@ -24,10 +24,6 @@ import VitalSignsPage from "../pages/nursing/VitalSignsPage";
 import BalanceHidricoPage from "../pages/nursing/BalanceHidricoPage";
 import MedicalOrdersNursingPage from "../pages/nursing/MedicalOrdersNursingPage";
 import NursingNotesPage from "../pages/nursing/NursingNotesPage";
-import MedicalOrdersDoctorPage from "../pages/doctor/MedicalOrdersDoctorPage";
-import EvolutionNotesPage from "../pages/doctor/EvolutionNotesPage";
-import EpicrisisAltaPage from "../pages/doctor/EpicrisisAltaPage";
-import DeathCertificatePage from "../pages/doctor/DeathCertificatePage";
 import PharmacyRequestsPage from "../pages/farmacia/PharmacyRequestsPage";
 import PrepareMedicationsPage from "../pages/farmacia/PrepareMedicationsPage";
 import ReturnsPage from "../pages/farmacia/ReturnsPage";
@@ -213,14 +209,6 @@ const RoleBasedLayout: React.FC = () => {
             <MedicalOrdersNursingPage />
           ) : selectedMenuItem === "notas-enfermeria" ? (
             <NursingNotesPage />
-          ) : selectedMenuItem === "ordenes-medicas" && selectedRole === "medico" ? (
-            <MedicalOrdersDoctorPage />
-          ) : selectedMenuItem === "notas-evolucion" ? (
-            <EvolutionNotesPage />
-          ) : selectedMenuItem === "epicrisis-alta" ? (
-            <EpicrisisAltaPage />
-          ) : selectedMenuItem === "certificado-defuncion" ? (
-            <DeathCertificatePage />
           ) : selectedMenuItem === "solicitudes-farmacia" ? (
             <PharmacyRequestsPage />
           ) : selectedMenuItem === "preparar-medicamentos" ? (

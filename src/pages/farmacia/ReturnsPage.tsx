@@ -14,9 +14,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
-  Grid,
   Stack,
+  Divider,
+  Chip,
 } from "@mui/material";
 import { useAtom } from "jotai";
 import { pharmacyRequestsAtom, updatePharmacyRequestAtom } from "../../stores/pharmacyStore";
@@ -25,37 +25,66 @@ import { PharmacyRequest } from "../../types/pharmacyRequest";
 const ReturnsPage: React.FC = () => {
   const [requests] = useAtom(pharmacyRequestsAtom);
   const [, updateRequest] = useAtom(updatePharmacyRequestAtom);
-  const [open, setOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [actionOpen, setActionOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<PharmacyRequest | null>(null);
-  const [returnData, setReturnData] = useState({ cantidad: 0, motivo: "" });
+  const [actionType, setActionType] = useState<"aceptar" | "rechazar" | null>(null);
 
   const deliveredRequests = requests.filter((r) => r.estado === "entregado");
 
-  const handleOpenReturn = (request: PharmacyRequest): void => {
+  const handleViewDetails = (request: PharmacyRequest): void => {
     setSelectedRequest(request);
-    setReturnData({ cantidad: request.cantidadTotalDia, motivo: "" });
-    setOpen(true);
+    setDetailsOpen(true);
   };
 
-  const handleClose = (): void => {
-    setOpen(false);
+  const handleOpenAction = (request: PharmacyRequest, type: "aceptar" | "rechazar"): void => {
+    setSelectedRequest(request);
+    setActionType(type);
+    setActionOpen(true);
+  };
+
+  const handleCloseDetails = (): void => {
+    setDetailsOpen(false);
     setSelectedRequest(null);
-    setReturnData({ cantidad: 0, motivo: "" });
   };
 
-  const handleSubmitReturn = (): void => {
-    if (!selectedRequest || !returnData.motivo) return;
+  const handleCloseAction = (): void => {
+    setActionOpen(false);
+    setSelectedRequest(null);
+    setActionType(null);
+  };
+
+  const handleAcceptReturn = (): void => {
+    if (!selectedRequest) return;
 
     updateRequest(selectedRequest.id, {
       estado: "devuelto",
       devolucion: {
-        cantidad: returnData.cantidad,
-        motivo: returnData.motivo,
+        cantidad: selectedRequest.cantidadTotalDia,
+        motivo: "Devolución aceptada",
         fecha: new Date().toISOString().split("T")[0],
       },
     });
 
-    handleClose();
+    handleCloseAction();
+  };
+
+  const handleRejectReturn = (): void => {
+    if (!selectedRequest) return;
+
+    updateRequest(selectedRequest.id, {
+      observaciones: "Devolución rechazada",
+    });
+
+    handleCloseAction();
+  };
+
+  const statusColors: Record<PharmacyRequest["estado"], "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning"> = {
+    pendiente: "warning",
+    preparando: "info",
+    listo: "primary",
+    entregado: "success",
+    devuelto: "error",
   };
 
   return (
@@ -108,14 +137,34 @@ const ReturnsPage: React.FC = () => {
                     : "-"}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    size="small"
-                    onClick={() => handleOpenReturn(request)}
-                  >
-                    Registrar Devolución
-                  </Button>
+                  <Stack direction="row" spacing={0.5} sx={{ flexWrap: "wrap", gap: 0.5 }}>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleViewDetails(request)}
+                      sx={{ minWidth: "auto", px: 1, py: 0.5, fontSize: "0.75rem" }}
+                    >
+                      Ver Detalles
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      size="small"
+                      onClick={() => handleOpenAction(request, "aceptar")}
+                      sx={{ minWidth: "auto", px: 1, py: 0.5, fontSize: "0.75rem" }}
+                    >
+                      Aceptar
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => handleOpenAction(request, "rechazar")}
+                      sx={{ minWidth: "auto", px: 1, py: 0.5, fontSize: "0.75rem" }}
+                    >
+                      Rechazar
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -123,64 +172,109 @@ const ReturnsPage: React.FC = () => {
         </Table>
       </TableContainer>
 
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Registrar Devolución</DialogTitle>
+      <Dialog open={detailsOpen} onClose={handleCloseDetails} maxWidth="sm" fullWidth>
+        <DialogTitle>Detalles de Solicitud</DialogTitle>
         <DialogContent dividers>
           {selectedRequest && (
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  <strong>Paciente:</strong> {selectedRequest.pacienteNombre}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1" gutterBottom>
-                  <strong>Medicamentos:</strong>
-                </Typography>
-                <Stack spacing={0.5} sx={{ pl: 2 }}>
-                  {selectedRequest.medicamentos.map((med, index) => (
-                    <Typography key={index} variant="body2">
-                      {med.medicamento} - {med.dosis} (Cantidad/día: {med.cantidad})
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+              <Typography variant="body1">
+                <strong>Paciente:</strong> {selectedRequest.pacienteNombre}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Enfermera:</strong> {selectedRequest.enfermera}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Ubicación:</strong> Hab. {selectedRequest.habitacion} - Cama {selectedRequest.cama}
+              </Typography>
+              <Divider />
+              <Typography variant="subtitle2" fontWeight="bold">
+                Medicamentos:
+              </Typography>
+              <Stack spacing={1.5}>
+                {selectedRequest.medicamentos.map((med, index) => (
+                  <Box key={index} sx={{ pl: 2, borderLeft: 2, borderColor: "primary.main" }}>
+                    <Typography variant="body2" fontWeight="medium">
+                      {med.medicamento}
                     </Typography>
-                  ))}
-                </Stack>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Cantidad Devuelta"
-                  type="number"
-                  value={returnData.cantidad}
-                  onChange={(e) =>
-                    setReturnData({ ...returnData, cantidad: parseFloat(e.target.value) || 0 })
-                  }
-                  inputProps={{ min: 0, max: selectedRequest.cantidadTotalDia }}
+                    <Typography variant="body2" color="text.secondary">
+                      Dosis: {med.dosis}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Cantidad/día: {med.cantidad}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+              <Divider />
+              <Typography variant="body1">
+                <strong>Cantidad Total/Día:</strong> {selectedRequest.cantidadTotalDia}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Fecha Solicitud:</strong> {new Date(selectedRequest.fechaSolicitud).toLocaleDateString("es-ES")}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Fecha Entrega:</strong> {selectedRequest.fechaEntrega ? new Date(selectedRequest.fechaEntrega).toLocaleDateString("es-ES") : "-"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Estado:</strong>{" "}
+                <Chip
+                  label={selectedRequest.estado}
+                  color={statusColors[selectedRequest.estado]}
+                  size="small"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Motivo de Devolución"
-                  value={returnData.motivo}
-                  onChange={(e) => setReturnData({ ...returnData, motivo: e.target.value })}
-                  multiline
-                  rows={3}
-                  required
-                />
-              </Grid>
-            </Grid>
+              </Typography>
+            </Box>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button
-            onClick={handleSubmitReturn}
-            variant="contained"
-            color="error"
-            disabled={!returnData.motivo || returnData.cantidad <= 0}
-          >
-            Registrar Devolución
-          </Button>
+          <Button onClick={handleCloseDetails}>Cerrar</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={actionOpen} onClose={handleCloseAction} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          {actionType === "aceptar" ? "Aceptar Devolución" : "Rechazar Devolución"}
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedRequest && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+              <Typography variant="body1">
+                <strong>Paciente:</strong> {selectedRequest.pacienteNombre}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Ubicación:</strong> Hab. {selectedRequest.habitacion} - Cama {selectedRequest.cama}
+              </Typography>
+              <Divider />
+              <Typography variant="subtitle2" fontWeight="bold">
+                Medicamentos:
+              </Typography>
+              <Stack spacing={0.5}>
+                {selectedRequest.medicamentos.map((med, index) => (
+                  <Typography key={index} variant="body2">
+                    {med.medicamento} - {med.dosis} (Cantidad/día: {med.cantidad})
+                  </Typography>
+                ))}
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                {actionType === "aceptar"
+                  ? "¿Está seguro de que desea aceptar esta devolución?"
+                  : "¿Está seguro de que desea rechazar esta devolución?"}
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAction}>Cancelar</Button>
+          {actionType === "aceptar" && (
+            <Button onClick={handleAcceptReturn} variant="contained" color="success">
+              Aceptar Devolución
+            </Button>
+          )}
+          {actionType === "rechazar" && (
+            <Button onClick={handleRejectReturn} variant="contained" color="error">
+              Rechazar Devolución
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </Box>

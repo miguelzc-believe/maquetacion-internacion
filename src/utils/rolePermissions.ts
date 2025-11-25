@@ -87,30 +87,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: React.createElement(Hotel),
       path: "/internados",
     },
-    {
-      id: "ordenes-medicas",
-      label: "Órdenes Médicas",
-      icon: React.createElement(Assignment),
-      path: "/ordenes-medicas",
-    },
-    {
-      id: "notas-evolucion",
-      label: "Notas Evolución",
-      icon: React.createElement(Note),
-      path: "/notas-evolucion",
-    },
-    {
-      id: "epicrisis-alta",
-      label: "Epicrisis / Alta",
-      icon: React.createElement(ExitToApp),
-      path: "/epicrisis-alta",
-    },
-    {
-      id: "certificado-defuncion",
-      label: "Certificado Defunción",
-      icon: React.createElement(Cancel),
-      path: "/certificado-defuncion",
-    },
   ],
   enfermera: [
     {
