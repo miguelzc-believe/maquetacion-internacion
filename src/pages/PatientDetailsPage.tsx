@@ -476,8 +476,8 @@ const PatientDetailsPage: React.FC = () => {
       const newNote: EvolutionNote = {
         id: `en-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fecha: now.toISOString().split("T")[0],
+        hora: now.toTimeString().split(" ")[0].substring(0, 5),
         medicoId: doctor.id,
         medicoNombre: doctor.nombre,
         sintomas: formData.sintomas || "",
@@ -652,7 +652,6 @@ const PatientDetailsPage: React.FC = () => {
       const newEpicrisis: Epicrisis = {
         id: `ep-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fechaIngreso: inpatient?.fechaIngreso || now.toISOString().split("T")[0],
         fechaAlta: now.toISOString().split("T")[0],
         medicoId: doctor.id,
@@ -833,7 +832,6 @@ const PatientDetailsPage: React.FC = () => {
       const newCertificate: DeathCertificate = {
         id: `dc-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fechaDefuncion: now.toISOString().split("T")[0],
         horaDefuncion: now.toTimeString().split(" ")[0].substring(0, 5),
         medicoId: doctor.id,
@@ -960,7 +958,6 @@ const PatientDetailsPage: React.FC = () => {
       const newVitalSigns: VitalSigns = {
         id: `vs-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fecha: now.toISOString().split("T")[0],
         hora: now.toTimeString().split(" ")[0].substring(0, 5),
         temperatura: formData.temperatura || 0,
@@ -971,6 +968,7 @@ const PatientDetailsPage: React.FC = () => {
         saturacionOxigeno: formData.saturacionOxigeno || 0,
         peso: formData.peso || 0,
         talla: formData.talla || 0,
+        registradoPor: "Enfermera",
       };
 
       addVitalSigns(newVitalSigns);
@@ -1189,7 +1187,6 @@ const PatientDetailsPage: React.FC = () => {
       const newFluidBalance: FluidBalance = {
         id: `fb-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fecha: now.toISOString().split("T")[0],
         hora: now.toTimeString().split(" ")[0].substring(0, 5),
         ingresos: formData.ingresos || {
@@ -1207,6 +1204,7 @@ const PatientDetailsPage: React.FC = () => {
           total: 0,
         },
         balance: formData.balance || 0,
+        registradoPor: "Enfermera",
       };
 
       addFluidBalance(newFluidBalance);
@@ -1502,11 +1500,11 @@ const PatientDetailsPage: React.FC = () => {
       const newNote: NursingNote = {
         id: `nn-${Date.now()}`,
         pacienteId: pacienteId,
-        pacienteNombre: pacienteNombre,
         fecha: now.toISOString().split("T")[0],
         hora: now.toTimeString().split(" ")[0].substring(0, 5),
         contenido: formData.contenido || "",
         tipo: formData.tipo || "evolucion",
+        registradoPor: "Enfermera",
       };
 
       addNote(newNote);
