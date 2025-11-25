@@ -42,12 +42,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       path: "/citas",
     },
     {
-      id: "registros",
-      label: "Registros",
-      icon: React.createElement(Assignment),
-      path: "/registros",
-    },
-    {
       id: "internacion",
       label: "Internación",
       icon: React.createElement(LocalHospital),
@@ -87,30 +81,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       icon: React.createElement(Hotel),
       path: "/internados",
     },
-    {
-      id: "ordenes-medicas",
-      label: "Órdenes Médicas",
-      icon: React.createElement(Assignment),
-      path: "/ordenes-medicas",
-    },
-    {
-      id: "notas-evolucion",
-      label: "Notas Evolución",
-      icon: React.createElement(Note),
-      path: "/notas-evolucion",
-    },
-    {
-      id: "epicrisis-alta",
-      label: "Epicrisis / Alta",
-      icon: React.createElement(ExitToApp),
-      path: "/epicrisis-alta",
-    },
-    {
-      id: "certificado-defuncion",
-      label: "Certificado Defunción",
-      icon: React.createElement(Cancel),
-      path: "/certificado-defuncion",
-    },
   ],
   enfermera: [
     {
@@ -118,30 +88,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       label: "Pacientes Internados",
       icon: React.createElement(Hotel),
       path: "/pacientes-internados",
-    },
-    {
-      id: "signos-vitales",
-      label: "Signos Vitales",
-      icon: React.createElement(Favorite),
-      path: "/signos-vitales",
-    },
-    {
-      id: "balance-hidrico",
-      label: "Balance Hídrico",
-      icon: React.createElement(WaterDrop),
-      path: "/balance-hidrico",
-    },
-    {
-      id: "ordenes-medicas",
-      label: "Órdenes Médicas",
-      icon: React.createElement(Assignment),
-      path: "/ordenes-medicas",
-    },
-    {
-      id: "notas-enfermeria",
-      label: "Notas Enfermería",
-      icon: React.createElement(Note),
-      path: "/notas-enfermeria",
     },
   ],
   administrador: [
@@ -182,12 +128,6 @@ export const menuItemsByRole: Record<UserRole, MenuItem[]> = {
       label: "Recolectar Muestra",
       icon: React.createElement(Science),
       path: "/recolectar-muestra",
-    },
-    {
-      id: "resultados",
-      label: "Resultados",
-      icon: React.createElement(Assessment),
-      path: "/resultados",
     },
   ],
   presupuesto: [

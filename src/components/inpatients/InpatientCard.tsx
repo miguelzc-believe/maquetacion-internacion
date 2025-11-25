@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -31,13 +32,34 @@ const statusColors: Record<string, "default" | "primary" | "secondary" | "error"
 };
 
 const InpatientCard: React.FC<InpatientCardProps> = ({ inpatient }) => {
+  const navigate = useNavigate();
   const diasInternado = Math.floor(
     (new Date().getTime() - new Date(inpatient.fechaIngreso).getTime()) /
       (1000 * 60 * 60 * 24)
   );
 
   return (
-    <Card elevation={3} sx={{ height: "100%" }}>
+    <Card
+      elevation={3}
+      sx={{
+        height: "100%",
+        cursor: "pointer",
+        transition: "transform 0.2s, box-shadow 0.2s",
+        "&:hover": {
+          transform: "translateY(-2px)",
+          boxShadow: 6,
+        },
+      }}
+      onClick={() => navigate(`/pacientes/${inpatient.pacienteId}`)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          navigate(`/pacientes/${inpatient.pacienteId}`);
+        }
+      }}
+    >
       <CardContent>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "start", mb: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
